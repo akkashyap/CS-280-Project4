@@ -1,6 +1,8 @@
 # This Makefile is used under Linux
 
-MATLABDIR ?= /usr/local/matlab
+MATLABDIR ?= /Users/Kevin/.matlab/R2012b
+#/Users/Kevin/Documents/MATLAB/CS-280-Project4/code/liblinear-1.93/matlab
+# /usr/local/matlab #/Applications/MATLAB_R2012b.app #/usr/local/matlab
 CXX ?= g++
 #CXX = g++-3.3
 CC ?= gcc
