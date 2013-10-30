@@ -1,4 +1,4 @@
-function [ angle, magnitude ] = findGradient( dx, dy )
+function [ angle ] = findGradient( dx, dy )
 
 height = size(dx,1);
 width = size(dx,2);
@@ -20,23 +20,20 @@ for i = 1:height
     end
 end
 
-%ROUNDING FOR DIRECTION
+%ROUNDING FOR DIRECTION  Bound between - 90 and 90. 
+%add 90 bound between 0 and 180.
+% Divde by 20 and floor
 for i = 1:height
     for j = 1:width
         oldValue = angle(i,j);
-        if oldValue < 22.5 && oldValue > -22.5
-            oldVal = 0;
-        elseif oldValue < 67.5 && oldValue > 22.5
-            oldVal = 45;
-        elseif (oldValue < 91 && oldValue > 67.5) ||  (oldValue > -91 && oldValue < -67.5)
-            oldVal = 90;
-        elseif oldValue > -67.5 && oldValue < -22.5
-            oldVal = 135;
-        end
-        angle(i,j) = oldVal;
+        oldValue = abs(double(oldValue + 89.9999));
+        oldValue = oldValue / 20.0;
+        oldValue = floor(oldValue);
+        angle(i,j) = oldValue;
     end
 end
 
+angle = uint8(angle);
 
 end
 
