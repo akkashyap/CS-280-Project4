@@ -9,7 +9,8 @@ testImages = test_data.images;
 testLabels = test_data.labels;
 [testRows,testCols,numTestImages] = size(testImages); 
 
-testImagesAsColumns = double(reshape(testImages, testRows*testCols, numTestImages));  % Every column is an image
+testImagesAsRows = double(reshape(testImages, testRows*testCols, numTestImages))';  % Every row is an image
+%rows equal num imges
 
 train_small = train_file.train;
 
@@ -19,7 +20,7 @@ trainingImages = singleImageSet.images; %28*28*100
 trainingLabels = singleImageSet.labels; %100 * 1
 
 [rows,cols,numTrainImages] = size(trainingImages); 
-imagesAsColumns = double(reshape(trainingImages, rows*cols, numTrainImages));  %imagesAsColumns(:,i) is the ith image. Every column is an image
+imagesAsColumns = double(reshape(trainingImages, rows*cols, numTrainImages))';  % Every row is an image
 
 
 
@@ -34,6 +35,7 @@ for i = 1 : numTrainImages
     spatialPyramid(:,i) = [ window4; window7];
 end
 
+spatialPyramid = spatialPyramid';
 % Done for num 2
 
 
@@ -47,7 +49,7 @@ for i = 1 : numTrainImages
     histogramPyramid(:, i) = [ histo4; histo7];
 end
 % Done for num 3
-
+histogramPyramid = histogramPyramid';
 
 
 model = train(trainingLabels, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
@@ -55,7 +57,7 @@ model2 = train(trainingLabels, spatialPyramid, '-s 2 -q');  %num2
 model3 = train(trainingLabels, histogramPyramid, '-s 2 -q');  %num3
 
 
-[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testImagesAsColumns, model);
+[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testImagesAsRows, model);
 
 [err_rate, wrong]=benchmark(testingResultsLabels,testLabels)
 
