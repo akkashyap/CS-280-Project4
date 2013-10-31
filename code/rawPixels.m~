@@ -50,14 +50,14 @@ end
 
 
 
-model = train(trainingLabels, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
-model2 = train(trainingLabels, spatialPyramid, '-s 2 -q');  %num2
-model3 = train(trainingLabels, histogramPyramid, '-s 2 -q');  %num3
+model = train(trainingImages, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
+model2 = train(trainingImages, sparse(double(imagesAsColumns)), '-s 2 -q');  %num2
+model3 = train(trainingImages, sparse(double(imagesAsColumns)), '-s 2 -q');  %num3
 
 
 [testingResultsLabels, testingResultAccuracy] = predict(testLabels, testImagesAsColumns, model);
 
-[err_rate, wrong]=benchmark(testingResultsLabels,testLabels)
 
 
 
+[err_rate, wrong]=benchmark(pred_labels,true_labels)
