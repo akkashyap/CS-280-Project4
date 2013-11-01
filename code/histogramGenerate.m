@@ -13,5 +13,6 @@ for j = 1 : length(buckets)
 end
 
 newHistogram = normr(double(newHistogram));
+%double(newHistogram)./norm(double(newHistogram));
 
 end

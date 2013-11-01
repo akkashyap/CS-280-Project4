@@ -14,52 +14,33 @@ testImagesAsRows = double(reshape(testImages, testRows*testCols, numTestImages))
 
 train_small = train_file.train;
 
-singleImageSet = train_small{2};  %Change from 1 to 7. 1 Is smalles numtraining examples
+singleImageSet = train_small{1};  %Change from 1 to 7. 1 Is smalles numtraining examples
 
 trainingImages = singleImageSet.images; %28*28*100
 trainingLabels = singleImageSet.labels; %100 * 1
 
 [rows,cols,numTrainImages] = size(trainingImages); 
-imagesAsColumns = double(reshape(trainingImages, rows*cols, numTrainImages))';  % Every row is an image
 
 
+imagesAsColumns = double(reshape(trainingImages, rows*cols, numTrainImages))';  % Every row vector. Num 1
+spatialPyramid = generateSpatialPyramid(trainingImages);  %num 2
+histogramPyramid = generateHistogramPyramid(trainingImages);  % num 3
 
-% Done for num 1
-
-spatialPyramid = zeros(233, numTrainImages);
-
-for i = 1 : numTrainImages
-    i
-    window4 = generatePatchSum(4, trainingImages(:,:,i));
-    window7 = generatePatchSum(7, trainingImages(:,:,i));
-    spatialPyramid(:,i) = [ window4; window7];
-end
-
-spatialPyramid = spatialPyramid';
-% Done for num 2
-
-
-histogramPyramid = zeros(2097, numTrainImages);
-for i = 1 : numTrainImages
-    i
-    [dx, dy ] = findPartialDerivative(trainingImages(:,:,i));
-    [ angles ] = findGradient( dx, dy );
-    histo4 = generateHistogramGrid(4, angles);
-    histo7 = generateHistogramGrid(7, angles);
-    histogramPyramid(:, i) = [ histo4; histo7];
-end
-% Done for num 3
-histogramPyramid = histogramPyramid';
-
+keyboard;
 
 model = train(trainingLabels, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
-model2 = train(trainingLabels, spatialPyramid, '-s 2 -q');  %num2
-model3 = train(trainingLabels, histogramPyramid, '-s 2 -q');  %num3
+model2 = train(trainingLabels, sparse(double(spatialPyramid)), '-s 2 -q');  %num2
+model3 = train(trainingLabels, sparse(double(histogramPyramid)), '-s 2 -q');  %num3
+
+testSpatialPyramid = generateSpatialPyramid(testImages);  %num 2
+testHistogramPyramid = generateHistogramPyramid(testImages);  %num 3
 
 
-[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testImagesAsRows, model);
+[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testImagesAsRows, model);   %num1
+[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testSpatialPyramid, model2); %num2
+[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testHistogramPyramid, model3); %num3
 
-[err_rate, wrong]=benchmark(testingResultsLabels,testLabels)
+[err_rate, wrong]=benchmark(testingResultsLabels,testLabels);
 
 
 
