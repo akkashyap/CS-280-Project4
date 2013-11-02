@@ -18,6 +18,11 @@ train_small = train_file.train;
 dataSetSize = zeros(1, size(train_small, 2));
 finalResults = zeros(1, 7);
 
+
+disp('Formatting Test Data');
+%testSpatialPyramid = generateSpatialPyramid(testImages);  %num 2
+testHistogramPyramid = generateHistogramPyramid(testImages);  %num 3
+
 for i = 1 : 7
     
     singleImageSet = train_small{i};  %Change from 1 to 7. 1 Is smalles numtraining examples
@@ -30,23 +35,24 @@ for i = 1 : 7
 
     dataSetSize(1, i) = numTrainImages;
     
+    disp('Formatting Train Data');
     %imagesAsColumns = double(reshape(trainingImages, rows*cols, numTrainImages))';  % Every row vector. Num 1
-    spatialPyramid = generateSpatialPyramid(trainingImages);  %num 2
-    %histogramPyramid = generateHistogramPyramid(trainingImages);  % num 3
+    %spatialPyramid = generateSpatialPyramid(trainingImages);  %num 2
+    histogramPyramid = generateHistogramPyramid(trainingImages);  % num 3
 
-    %model = train(trainingLabels, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
+    
     disp('Training');
-    model2 = train(trainingLabels, sparse(double(spatialPyramid)), '-s 2 -q');  %num2
-    %model3 = train(trainingLabels, sparse(double(histogramPyramid)), '-s 2 -q');  %num3
+    %model = train(trainingLabels, sparse(double(imagesAsColumns)), '-s 2 -q');  %num1
+    %model2 = train(trainingLabels, sparse(double(spatialPyramid)), '-s 2 -q');  %num2
+    model3 = train(trainingLabels, sparse(double(histogramPyramid)), '-s 2 -q');  %num3
 
-    testSpatialPyramid = generateSpatialPyramid(testImages);  %num 2
-    %testHistogramPyramid = generateHistogramPyramid(testImages);  %num 3
+    
 
 
     disp('Testing');
     %[testingResultsLabels, testingResultAccuracy] = predict(testLabels, sparse(double(testImagesAsRows)), model);   %num1
-    [testingResultsLabels, testingResultAccuracy] = predict(testLabels, testSpatialPyramid, model2); %num2
-    %[testingResultsLabels, testingResultAccuracy] = predict(testLabels, testHistogramPyramid, model3); %num3
+    %[testingResultsLabels, testingResultAccuracy] = predict(testLabels, sparse(double(testSpatialPyramid)), model2); %num2
+    [testingResultsLabels, testingResultAccuracy] = predict(testLabels, sparse(double(testHistogramPyramid)), model3); %num3
 
     [err_rate, wrong]=benchmark(testingResultsLabels,testLabels);
     finalResults(1,i) = err_rate*100;
