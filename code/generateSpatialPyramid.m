@@ -7,7 +7,7 @@ function [ spatialPyramid ] = generateSpatialPyramid(images)
 spatialPyramid = zeros(233, images);
 
 for i = 1 : numImages
-    i
+    
     window4 = generatePatchSum(4, images(:,:,i));
     window7 = generatePatchSum(7, images(:,:,i));
     spatialPyramid(:,i) = [ window4; window7];
