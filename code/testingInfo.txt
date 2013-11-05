@@ -31,9 +31,8 @@ Best error rate is 3.02
 Have chart called graph1_3NoNormalize.png
 
 
-DID NOT FINISH
 Gaussion Derivative Graph
-Best error rate is 
+Best error rate is 2.2
 Have chart called graph1_3Gaussion.png
 
 
